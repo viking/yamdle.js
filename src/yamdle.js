@@ -11,6 +11,15 @@ define(function() {
           var str = obj.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
           return '"' + str + '"';
         }
+
+      case 'number':
+      case 'boolean':
+        return obj.toString();
+
+      case 'object':
+        if (obj === null) {
+          return 'null';
+        }
     }
   };
 
