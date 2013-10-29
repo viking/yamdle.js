@@ -65,9 +65,29 @@ define([
       this.assertEquals("[]", yamdle.stringify([]));
     },
 
+    'nested arrays': function() {
+      var arr = [['foo', 'bar'], 'baz'];
+      this.assertEquals("- - foo\n  - bar\n- baz", yamdle.stringify(arr));
+    },
+
+    'array with object': function() {
+      var arr = ['foo', {bar: 'baz', qux: 'corge'}];
+      this.assertEquals("- foo\n- bar: baz\n  qux: corge", yamdle.stringify(arr));
+    },
+
     'object': function() {
       var obj = {foo: 'bar', baz: 'qux'};
       this.assertEquals("foo: bar\nbaz: qux", yamdle.stringify(obj));
+    },
+
+    'object with array value': function() {
+      var obj = {foo: 'bar', baz: ['qux', 'corge']};
+      this.assertEquals("foo: bar\nbaz:\n  - qux\n  - corge", yamdle.stringify(obj));
+    },
+
+    'nested object values': function() {
+      var obj = {foo: 'bar', baz: {qux: 'corge', grault: 'garply'}};
+      this.assertEquals("foo: bar\nbaz:\n  qux: corge\n  grault: garply", yamdle.stringify(obj));
     }
   });
 });

@@ -1,56 +1,97 @@
 define(function() {
   var yamdle = {};
 
-  yamdle.stringify = function(obj, context) {
-    switch (typeof(obj)) {
-      case 'string':
-        if (yamdle.isPlain(obj, context)) {
-          return obj;
+  yamdle.stringify = function(obj, indent, context) {
+    if (typeof(indent) == 'undefined') {
+      indent = 0;
+    }
+    var indentStr = yamdle.indentStr(indent);
+
+    switch (yamdle.typeOf(obj)) {
+      case 'scalar':
+        if (typeof(obj) == 'string') {
+          if (yamdle.isPlain(obj, context)) {
+            return obj;
+          }
+          else {
+            var str = obj.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+            return '"' + str + '"';
+          }
+        }
+        else if (obj === null) {
+          return "null";
         }
         else {
-          var str = obj.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-          return '"' + str + '"';
+          return obj.toString();
         }
 
+      case 'sequence':
+        if (obj.length == 0) {
+          return "[]";
+        }
+
+        var str = ''
+        for (var i = 0, ilen = obj.length; i < ilen; i++) {
+          if (i > 0) {
+            str += '\n' + indentStr;
+          }
+          str += '- ' + yamdle.stringify(obj[i], indent + 1);
+        }
+        return str;
+
+      case 'map':
+        var str = '', first = true;
+        for (key in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            var value = obj[key];
+
+            if (first) {
+              first = false;
+            }
+            else {
+              str += '\n' + indentStr;
+            }
+
+            str += yamdle.stringify(key, indent + 1, 'block-key');
+            if (yamdle.typeOf(value) == 'scalar') {
+              str += ': ';
+            }
+            else {
+              str += ':\n' + yamdle.indentStr(indent + 1);
+            }
+
+            str += yamdle.stringify(value, indent + 1);
+            i++;
+          }
+        }
+        return str;
+    }
+  };
+
+  yamdle.indentStr = function(level) {
+    var indentStr = '';
+    for (var i = 0; i < level; i++) {
+      indentStr += '  ';
+    }
+    return indentStr;
+  };
+
+  yamdle.typeOf = function(obj) {
+    switch (typeof(obj)) {
+      case 'string':
       case 'number':
       case 'boolean':
-        return obj.toString();
+        return 'scalar';
 
       case 'object':
         if (obj === null) {
-          return 'null';
+          return 'scalar';
         }
         else if (obj instanceof Array) {
-          if (obj.length == 0) {
-            return "[]";
-          }
-
-          var str = ''
-          for (var i = 0, ilen = obj.length; i < ilen; i++) {
-            if (i > 0) {
-              str += '\n';
-            }
-            str += '- ' + yamdle.stringify(obj[i]);
-          }
-          return str;
+          return 'sequence';
         }
         else {
-          var str = '', first = true;
-          for (key in obj) {
-            if (Object.prototype.hasOwnProperty.call(obj, key)) {
-              if (first) {
-                first = false;
-              }
-              else {
-                str += '\n';
-              }
-
-              str += yamdle.stringify(key, 'block-key');
-              str += ': ' + yamdle.stringify(obj[key]);
-              i++;
-            }
-          }
-          return str;
+          return 'map';
         }
     }
   };
