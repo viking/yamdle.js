@@ -35,15 +35,18 @@ define(function() {
           return str;
         }
         else {
-          var str = '', i = 0;
+          var str = '', first = true;
           for (key in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, key)) {
-              var keyStr = yamdle.stringify(key, 'block-key');
-              var valueStr = yamdle.stringify(obj[key]);
-              if (i > 0) {
+              if (first) {
+                first = false;
+              }
+              else {
                 str += '\n';
               }
-              str += keyStr + ': ' + valueStr;
+
+              str += yamdle.stringify(key, 'block-key');
+              str += ': ' + yamdle.stringify(obj[key]);
               i++;
             }
           }
