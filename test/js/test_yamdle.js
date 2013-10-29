@@ -47,6 +47,19 @@ define([
 
     'null': function() {
       this.assertEquals("null", yamdle.stringify(null));
+    },
+
+    'array': function() {
+      this.assertEquals("- foo\n- bar", yamdle.stringify(['foo', 'bar']));
+    },
+
+    'empty array': function() {
+      this.assertEquals("[]", yamdle.stringify([]));
+    },
+
+    'object': function() {
+      var obj = {foo: 'bar', baz: 'qux'};
+      this.assertEquals("foo: bar\nbaz: qux", yamdle.stringify(obj));
     }
   });
 });

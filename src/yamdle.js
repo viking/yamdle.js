@@ -20,6 +20,35 @@ define(function() {
         if (obj === null) {
           return 'null';
         }
+        else if (obj instanceof Array) {
+          if (obj.length == 0) {
+            return "[]";
+          }
+
+          var str = ''
+          for (var i = 0, ilen = obj.length; i < ilen; i++) {
+            if (i > 0) {
+              str += '\n';
+            }
+            str += '- ' + yamdle.stringify(obj[i]);
+          }
+          return str;
+        }
+        else {
+          var str = '', i = 0;
+          for (key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+              var keyStr = yamdle.stringify(key, 'block-key');
+              var valueStr = yamdle.stringify(obj[key]);
+              if (i > 0) {
+                str += '\n';
+              }
+              str += keyStr + ': ' + valueStr;
+              i++;
+            }
+          }
+          return str;
+        }
     }
   };
 
