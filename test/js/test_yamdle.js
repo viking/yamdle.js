@@ -32,6 +32,14 @@ define([
       this.assertEquals('"null"', yamdle.stringify("null"));
     },
 
+    'sequence string': function() {
+      this.assertEquals('"[]"', yamdle.stringify("[]"));
+    },
+
+    'map string': function() {
+      this.assertEquals('"{}"', yamdle.stringify("{}"));
+    },
+
     'integer': function() {
       this.assertEquals("123", yamdle.stringify(123));
     },
