@@ -52,6 +52,15 @@ define(function() {
           break;
         }
       }
+
+      // check for integer
+      plain = plain && !str.match(/^-?(0|[1-9][0-9]*)$/);
+
+      // check for float
+      plain = plain && !str.match(/^-?(0|[1-9][0-9]*)(\.[0-9]*)?([eE][-+]?[0-9]+)?$/);
+
+      // check for boolean and null
+      plain = plain && !str.match(/^(true|false|null)$/);
     }
 
     return plain;
