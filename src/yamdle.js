@@ -10,7 +10,10 @@ define(function() {
     switch (yamdle.typeOf(obj)) {
       case 'scalar':
         if (typeof(obj) == 'string') {
-          if (yamdle.isPlain(obj, context)) {
+          if (obj == "") {
+            return '""';
+          }
+          else if (yamdle.isPlain(obj, context)) {
             return obj;
           }
           else {

@@ -80,6 +80,11 @@ define([
       this.assertEquals("foo: bar\nbaz: qux", yamdle.stringify(obj));
     },
 
+    'object with empty string value': function() {
+      var obj = {foo: ''};
+      this.assertEquals('foo: ""', yamdle.stringify(obj));
+    },
+
     'object with array value': function() {
       var obj = {foo: 'bar', baz: ['qux', 'corge']};
       this.assertEquals("foo: bar\nbaz:\n  - qux\n  - corge", yamdle.stringify(obj));
